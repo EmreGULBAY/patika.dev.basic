@@ -1,0 +1,81 @@
+import java.util.*;
+
+public class Puzzle {
+
+    public static void main(String[] args) {
+        SummationPuzzle sumPuz = new SummationPuzzle();
+        sumPuz.findUniques();
+        sumPuz.arrange(0);
+    }
+}
+class SummationPuzzle{
+    private String input1;
+    private String input2;
+    private String output;
+    private int[] isUsed;
+    private ArrayList<Character> uniqueChars;
+    private HashMap<Character,Integer> uniqueNumbers;
+    public SummationPuzzle()throws RuntimeException{
+        Scanner scn = new Scanner(System.in);
+        System.out.print("Enter 1st input value: ");
+        input1 = scn.next();
+        if (input1.length()<2||input1.length()>6){
+            throw new RuntimeException("ERROR: String length" +
+                    " must be between 2 and 6!");}
+        System.out.print("Enter 2nd input value: ");
+        input2 = scn.next();
+        if (input1.length()<2||input1.length()>6){
+            throw new RuntimeException("ERROR: String length" +
+                    " must be between 2 and 6!");}
+        System.out.print("Enter Output value: ");
+        output = scn.next();
+        if (input1.length()<2||input1.length()>6){
+            throw new RuntimeException("ERROR: String length" +
+                    " must be between 2 and 6!");}
+        uniqueNumbers = new HashMap<>();
+        uniqueChars = new ArrayList<>();
+        isUsed = new int[10];
+    }
+    public void findUniques()throws RuntimeException{
+        Set<Character> tempUniques = new HashSet<>();
+        for (char i:input1.toCharArray()){
+            tempUniques.add(i);}
+        for (char i:input2.toCharArray()){
+            tempUniques.add(i);}
+        for (char i:output.toCharArray()){
+            tempUniques.add(i);}
+        if (tempUniques.size()>10){
+            throw new RuntimeException("ERROR: Number of unique letters" +
+                    " can be maximum of 10!");}
+        uniqueChars.addAll(tempUniques);
+    }
+    public void arrange(int rec){
+        if (rec==uniqueChars.size()){
+            int first=0;
+            int second=0;
+            int out=0;
+            for (int i=0;i<input1.length();i++){
+                first +=
+    uniqueNumbers.get(input1.charAt(i))*Math.pow(10,input1.length()-(i+1));}
+            for (int i=0;i<input2.length();i++){
+                second +=
+    uniqueNumbers.get(input2.charAt(i))*Math.pow(10,input2.length()-(i+1));}
+            for (int i=0;i<output.length();i++){
+                out +=
+    uniqueNumbers.get(output.charAt(i))*Math.pow(10,output.length()-(i+1));}
+            if (first+second==out){
+                System.out.println("searching...found!\n");
+                System.out.println(input1 +":  "+ first);
+                System.out.println(input2 +":  "+ second);
+                System.out.println(output +":  "+ out);
+                System.out.println(" ");}
+            return;}
+        for (int i=0;i<=9;i++){
+            if (isUsed[i] == 0){
+                uniqueNumbers.put(uniqueChars.get(rec),i);
+                isUsed[i] = 1;
+                arrange(rec+1);
+                isUsed[i] = 0;
+                uniqueNumbers.put(uniqueChars.get(rec),-1);}}
+    }
+}
